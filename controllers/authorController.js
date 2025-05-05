@@ -1,4 +1,5 @@
 const Author = require('../models/Author');
+const Libro = require('../models/Book');
 
 const getAllAuthors = async (req, res) => {
     try {
@@ -74,27 +75,35 @@ const deleteAuthor = async (req, res) => {
         res.status(500).json({ message: "Error al eliminar el author", error });
     }
 };
+
 const addBook = async (req, res) => {
-    const { id , bookId} = req.params;
+    const { id, bookId } = req.params;
     try {
         const author = await Author.findById(id);
-        if(!author) {
-            return res.status(404).json({message: "Author no encontrado"});
+        if (!author) {
+            return res.status(404).json({ message: "Author no encontrado" });
+        }
+
+        const libro = await Libro.findById(bookId);
+        if (!libro) {
+            return res.status(404).json({ message: "El libro no existe" });
         }
 
         //evitar duplicados
-        if(author.libros.includes(bookId)) {
-            return res.status(404).json({message: "Libro ya esta asignado a este Author"});
+        if (author.libros.includes(bookId)) {
+            return res.status(400).json({ message: "Libro ya está asignado a este Author" });
         }
+
         //agregar al libro
         author.libros.push(bookId);
         await author.save();
 
-        res.json(author)
+        res.json(author);
     } catch (error) {
-        res.status(500).json({ message: "Error al agregar un libro", error });
+        res.status(500).json({ message: "Error al agregar un libro", error: error.message });
     }
-}
+};
+
 
 module.exports = {
     getAllAuthors,

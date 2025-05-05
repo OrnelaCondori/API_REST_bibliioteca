@@ -64,7 +64,7 @@ const updateLibro = async (req, res) => {
 const deleteLibro = async (req, res) => {
     const { id } = req.params;
     try {
-        const deletedLibro = await Project.findByIdAndDelete(id);
+        const deletedLibro = await Book.findByIdAndDelete(id);
         if (!deletedLibro) {
             return res.status(404).json({ message: "Libro no encontrado" });
         }
