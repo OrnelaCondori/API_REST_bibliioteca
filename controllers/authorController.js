@@ -64,7 +64,7 @@ const updateAuthor = async (req, res) => {
 const deleteAuthor = async (req, res) => {
     const { id } = req.params;
     try {
-        const deletedAuthor = await Project.findByIdAndDelete(id);
+        const deletedAuthor = await Author.findByIdAndDelete(id);
         if (!deletedAuthor) {
             return res.status(404).json({ message: "Author no encontrado" });
         }
@@ -83,7 +83,7 @@ const addBook = async (req, res) => {
         }
 
         //evitar duplicados
-        if(author.includes(bookId)) {
+        if(author.libros.includes(bookId)) {
             return res.status(404).json({message: "Libro ya esta asignado a este Author"});
         }
         //agregar al libro
